@@ -1,0 +1,54 @@
+generated: '2026-07-25'
+method: searched
+source: live responses observed on https://pac.bluecross.ca (2026-07-25)
+format: rfc9457
+scope: >-
+  Blue Cross Canada publishes no error reference, because it publishes no API. The problem
+  types below were observed live, verbatim, from the only machine-readable HTTP surface in the
+  federation — the Pacific Blue Cross Umbraco Content Delivery API and its OpenIddict token
+  endpoint. Nothing here is derived from an OpenAPI (none exists) and nothing is invented; each
+  entry is a response body actually returned to an anonymous request.
+envelopes:
+- name: rfc9457-problem-details
+  media_type: application/problem+json
+  fields: [type, title, status, traceId]
+  surface: https://pac.bluecross.ca/umbraco/delivery/api/v*/content
+  note: >-
+    ASP.NET Core ProblemDetails. The `type` member dereferences to the RFC 9110 status-code
+    section rather than a provider-owned problem-type registry, so the type URI carries no
+    Blue-Cross-specific semantics. `traceId` is a W3C traceparent value usable for support.
+- name: oauth2-error
+  media_type: application/json
+  fields: [error, error_description, error_uri]
+  surface: https://pac.bluecross.ca/umbraco/delivery/api/v1/security/member/token
+  note: RFC 6749 §5.2 error envelope emitted by OpenIddict; error_uri points at OpenIddict docs.
+problems:
+- status: 401
+  type: https://tools.ietf.org/html/rfc9110#section-15.5.2
+  title: Unauthorized
+  envelope: rfc9457-problem-details
+  observed_on:
+  - GET https://pac.bluecross.ca/umbraco/delivery/api/v2/content
+  - GET https://pac.bluecross.ca/umbraco/delivery/api/v1/content
+  - GET https://pac.bluecross.ca/umbraco/delivery/api/v1/media
+  remediation: >-
+    The Content Delivery API is API-key gated. Every anonymous request returns 401 regardless of
+    path validity — an unknown item id returns 401, not 404 — so the surface leaks no content
+    inventory. No public key-request process is documented.
+- status: 401
+  code: invalid_client
+  title: The mandatory 'client_id' parameter is missing.
+  envelope: oauth2-error
+  error_uri: https://documentation.openiddict.com/errors/ID2029
+  observed_on:
+  - POST https://pac.bluecross.ca/umbraco/delivery/api/v1/security/member/token
+  remediation: >-
+    Present a client_id provisioned out of band using client_secret_basic or client_secret_post;
+    no self-serve client registration is published.
+not_found:
+  provider_error_reference: >-
+    No error-code reference, status-code table, or troubleshooting page is published by the
+    association or by any member plan.
+  decline_codes: >-
+    Not applicable — this is a health/dental/travel/life benefits federation, not a card
+    acquirer. No decline-code artifact is emitted.

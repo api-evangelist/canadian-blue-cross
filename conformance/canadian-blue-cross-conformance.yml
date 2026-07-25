@@ -1,0 +1,99 @@
+generated: '2026-07-25'
+method: searched
+source: >-
+  live probes of bluecross.ca and every operating member-plan host, plus the Pacific Blue Cross
+  /.well-known/ discovery documents captured in well-known/
+scope: >-
+  Standards conformance for Blue Cross Canada is assessed against what the federation actually
+  serves on the public internet. Only the Pacific Blue Cross member-authentication stack yields
+  positive evidence; every API-facing standard is absent because no API is published.
+standards:
+- id: oauth2
+  conforms: true
+  evidence: >-
+    RFC 8414 authorization-server metadata served 200 at
+    https://pac.bluecross.ca/.well-known/oauth-authorization-server; authorization_code and
+    refresh_token grants advertised.
+  scope: Pacific Blue Cross member sign-in only (Umbraco CMS), not an insurance API.
+- id: oidc
+  conforms: true
+  evidence: >-
+    OIDC Discovery document served 200 at
+    https://pac.bluecross.ca/.well-known/openid-configuration with issuer, jwks_uri,
+    userinfo_endpoint, id_token_signing_alg_values_supported RS256.
+  scope: Pacific Blue Cross member sign-in only.
+- id: rfc7636-pkce
+  conforms: true
+  evidence: 'code_challenge_methods_supported: [plain, S256]'
+- id: rfc7009-token-revocation
+  conforms: true
+  evidence: revocation_endpoint advertised with client_secret_basic/client_secret_post.
+- id: rfc7517-jwks
+  conforms: true
+  evidence: >-
+    https://pac.bluecross.ca/.well-known/jwks returns 200 with one RSA signing key (use=sig,
+    kty=RSA).
+- id: rfc9457-problem-details
+  conforms: true
+  evidence: >-
+    Umbraco Content Delivery API returns application/problem+json with type/title/status/traceId
+    (observed 401). See errors/canadian-blue-cross-problem-types.yml.
+  scope: CMS content surface only.
+- id: rfc9116-security-txt
+  conforms: false
+  evidence: /.well-known/security.txt returns 404 on every host probed.
+- id: openapi
+  conforms: false
+  evidence: >-
+    No OpenAPI or Swagger document found on bluecross.ca or any member-plan host;
+    /openapi.json, /swagger.json, /api-docs, /umbraco/swagger/* all 404.
+- id: asyncapi
+  conforms: false
+  evidence: No event, streaming, or webhook surface documented anywhere in the federation.
+- id: graphql
+  conforms: false
+  evidence: /graphql returns 404 on the association site and on every member-plan host probed.
+- id: fhir-r4
+  conforms: false
+  evidence: >-
+    No FHIR endpoint, capability statement, or patient-access API. Unlike the US Blues — where
+    the CMS Interoperability and Patient Access rule forced Patient Access / Provider Directory
+    FHIR APIs into production — Canada has no equivalent mandate, so no Canadian Blue Cross plan
+    publishes FHIR.
+- id: cms-9115-patient-access
+  conforms: false
+  applicable: false
+  evidence: US regulation; no Canadian analogue applies to this federation.
+- id: psd2
+  conforms: false
+  applicable: false
+  evidence: EU banking regulation; not applicable to a Canadian health-benefits carrier.
+- id: cdr-open-banking
+  conforms: false
+  applicable: false
+  evidence: >-
+    Canada's Consumer-Driven Banking framework explicitly excludes insurance, so no open-data
+    obligation reaches this federation.
+- id: acord
+  conforms: false
+  evidence: >-
+    Zero ACORD / AL3 / NGDS references across the full association site. ACORD is a
+    property-and-casualty standards body; this is a health, dental, travel, group-benefits and
+    life book, so its absence is expected rather than a gap.
+- id: hl7-v2
+  conforms: false
+  evidence: No HL7 interface or messaging specification published publicly.
+compliance_program:
+  published: false
+  note: >-
+    No trust centre, no SOC 2 / ISO 27001 / PCI DSS / HIPAA attestation page, and no named
+    certification is published by the association or by the member plans probed. Because no
+    compliance programme is published, NO `Compliance` pointer is emitted — the artifact records
+    the negative rather than manufacturing the check.
+adjacent_rails:
+  note: >-
+    Electronic claims between health-care providers and these plans do move over real
+    integration rails — Claimstream (used by Alberta, Pacific and Medavie Blue Cross), Medavie
+    ePay, and third-party networks such as TELUS eClaims — but none of these publish a public
+    specification, conformance profile, or developer documentation, so nothing is asserted about
+    them here beyond their existence.

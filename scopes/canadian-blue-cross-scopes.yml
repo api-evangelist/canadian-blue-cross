@@ -1,0 +1,37 @@
+generated: '2026-07-25'
+method: searched
+source: https://pac.bluecross.ca/.well-known/openid-configuration
+docs: null
+scope: >-
+  There is no Blue Cross Canada OAuth scope programme. The only published scopes_supported in
+  the federation come from the Pacific Blue Cross Umbraco member authorization server, and they
+  are the two generic OIDC scopes that server advertises. No benefits, claims, eligibility, or
+  policy scopes exist because no such API is published.
+schemes:
+- name: pacific-blue-cross-member-oidc
+  issuer: https://pac.bluecross.ca/
+  source: well-known/canadian-blue-cross-pac-openid-configuration.json
+  flows:
+  - flow: authorizationCode
+    authorizationUrl: https://pac.bluecross.ca/umbraco/delivery/api/v1/security/member/authorize
+    tokenUrl: https://pac.bluecross.ca/umbraco/delivery/api/v1/security/member/token
+scopes:
+- scope: openid
+  description: >-
+    Standard OpenID Connect scope requesting an ID token for the signed-in Pacific Blue Cross
+    website member.
+  flows: [authorizationCode]
+  sources: [well-known/canadian-blue-cross-pac-openid-configuration.json]
+- scope: offline_access
+  description: >-
+    Requests a refresh token so the member session can be renewed without re-authentication;
+    refresh_token is an advertised grant type.
+  flows: [authorizationCode, refreshToken]
+  sources: [well-known/canadian-blue-cross-pac-openid-configuration.json]
+absent:
+  domain_scopes: >-
+    No read/write scopes for claims, benefits, eligibility, providers, groups, or payments are
+    advertised on any host in the federation.
+  other_plans: >-
+    Alberta, Ontario/Quebec, Medavie, Saskatchewan and Manitoba Blue Cross serve no OAuth or
+    OIDC discovery document at all (404/NXDOMAIN), so they contribute no scopes.

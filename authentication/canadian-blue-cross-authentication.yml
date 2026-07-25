@@ -1,0 +1,93 @@
+generated: '2026-07-25'
+method: searched
+source: https://pac.bluecross.ca/.well-known/openid-configuration
+docs: null
+scope: >-
+  Blue Cross Canada publishes no API authentication programme — no API keys, no client
+  registration, no partner OAuth onboarding. The one machine-readable authentication contract
+  live anywhere in the federation is the OpenID Connect / OAuth 2.0 authorization server that
+  Pacific Blue Cross (pac.bluecross.ca) serves for Umbraco Content Delivery API member sign-in.
+  It is captured here verbatim because it is real, anonymous, and machine-readable — but it
+  authenticates website members against a CMS, not a claims, benefits, or eligibility API.
+summary:
+  types: [oauth2, openIdConnect]
+  api_key_in: []
+  oauth2_flows: [authorizationCode, refreshToken]
+  pkce: [S256, plain]
+  public_api_auth: none
+  human_login_only: true
+schemes:
+- name: pacific-blue-cross-member-oidc
+  type: openIdConnect
+  openIdConnectUrl: https://pac.bluecross.ca/.well-known/openid-configuration
+  issuer: https://pac.bluecross.ca/
+  sources:
+  - well-known/canadian-blue-cross-pac-openid-configuration.json
+  endpoints:
+    authorization: https://pac.bluecross.ca/umbraco/delivery/api/v1/security/member/authorize
+    token: https://pac.bluecross.ca/umbraco/delivery/api/v1/security/member/token
+    userinfo: https://pac.bluecross.ca/umbraco/delivery/api/v1/security/member/userinfo
+    end_session: https://pac.bluecross.ca/umbraco/delivery/api/v1/security/member/signout
+    revocation: https://pac.bluecross.ca/umbraco/delivery/api/v1/security/member/revoke
+    jwks: https://pac.bluecross.ca/.well-known/jwks
+  flows:
+  - flow: authorizationCode
+    response_types: [code]
+    response_modes: [form_post, fragment, query]
+    scopes: [openid, offline_access]
+  - flow: refreshToken
+    scopes: [offline_access]
+  token_endpoint_auth_methods: [client_secret_basic, client_secret_post]
+  revocation_endpoint_auth_methods: [client_secret_basic, client_secret_post]
+  id_token_signing_alg: [RS256]
+  code_challenge_methods: [plain, S256]
+  subject_types: [public]
+  claims: [aud, exp, iat, iss, sub]
+  parameters:
+    claims_parameter_supported: false
+    request_parameter_supported: false
+    request_uri_parameter_supported: false
+    authorization_response_iss_parameter_supported: true
+  notes:
+  - Backed by OpenIddict — the token endpoint returns OpenIddict error_uri values
+    (https://documentation.openiddict.com/errors/ID2029) on an unauthenticated POST.
+  - No dynamic client registration endpoint is advertised; client_id must be provisioned
+    out of band, and no self-serve registration page is published.
+  - Claims set is the bare JWT registered-claim minimum (no profile/email claims advertised).
+- name: rfc8414-authorization-server-metadata
+  type: oauth2
+  sources:
+  - well-known/canadian-blue-cross-pac-oauth-authorization-server.json
+  note: >-
+    /.well-known/oauth-authorization-server returns the same document as the OIDC discovery
+    endpoint (byte-identical), so it is recorded as one authorization server presented under
+    both RFC 8414 and OIDC Discovery.
+absent:
+- api_keys
+- http_basic_api_auth
+- http_bearer_api_key
+- mutualTLS
+- client_credentials_flow
+- dynamic_client_registration
+- partner_developer_onboarding
+member_plan_auth:
+- plan: Alberta Blue Cross
+  host: ab.bluecross.ca
+  model: web session login (member / plan sponsor / provider portals); Cloudflare bot protection
+  discovery: none
+- plan: Ontario / Quebec Blue Cross (Canassurance)
+  host: on.bluecross.ca
+  model: web session login
+  discovery: none
+- plan: Medavie Blue Cross
+  host: www.medaviebc.ca
+  model: web session login (member, plan sponsor, health-professional portals)
+  discovery: none
+- plan: Saskatchewan Blue Cross
+  host: www.sk.bluecross.ca
+  model: web session login
+  discovery: none
+- plan: Manitoba Blue Cross
+  host: www.mb.bluecross.ca
+  model: web session login
+  discovery: none

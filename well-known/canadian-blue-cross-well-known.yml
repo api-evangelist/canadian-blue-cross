@@ -1,0 +1,125 @@
+generated: '2026-07-25'
+method: searched
+source: live probes of /.well-known/ across bluecross.ca and every operating member-plan host
+scope: >-
+  Blue Cross Canada (the Canadian Association of Blue Cross Plans) publishes nothing at
+  /.well-known/ on its own domain. The only live discovery documents in the federation sit on
+  pac.bluecross.ca (Pacific Blue Cross), which runs Umbraco CMS with its Content Delivery API
+  member-authentication stack enabled. Those documents are REAL, anonymous, and machine-readable
+  — but they describe member web-portal sign-in for the CMS, not an insurance product API. No
+  claims, benefits, eligibility, or policy API is discoverable anywhere in the federation.
+hosts:
+- host: https://www.bluecross.ca
+  plan: Canadian Association of Blue Cross Plans (national brand site)
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /llms.txt
+    status: 404
+- host: https://pac.bluecross.ca
+  plan: Pacific Blue Cross (British Columbia)
+  platform: Umbraco CMS + OpenIddict authorization server
+  documents:
+  - path: /.well-known/openid-configuration
+    status: 200
+    content_type: application/json;charset=UTF-8
+    file: canadian-blue-cross-pac-openid-configuration.json
+    note: OIDC discovery for Umbraco Content Delivery API member authentication.
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    content_type: application/json;charset=UTF-8
+    file: canadian-blue-cross-pac-oauth-authorization-server.json
+    note: RFC 8414 authorization-server metadata; byte-identical to the OIDC document.
+  - path: /.well-known/jwks
+    status: 200
+    content_type: application/json;charset=UTF-8
+    file: canadian-blue-cross-pac-jwks.json
+    note: Single RSA signing key (RS256), advertised by jwks_uri.
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /llms.txt
+    status: 404
+- host: https://ab.bluecross.ca
+  plan: Alberta Blue Cross
+  documents:
+  - path: /.well-known/security.txt
+    status: 300
+    note: Cloudflare interstitial; host returns 403/300 to non-browser clients (bot protection).
+  - path: /.well-known/openid-configuration
+    status: 300
+  - path: /.well-known/oauth-authorization-server
+    status: 300
+  - path: /.well-known/api-catalog
+    status: 300
+  - path: /llms.txt
+    status: 200
+    note: >-
+      NOT an llms.txt — the host answers 200 with its HTML "Page not found" template
+      (soft 404). Verified by fetching the body. No llms.txt exists.
+- host: https://on.bluecross.ca
+  plan: Ontario / Quebec Blue Cross (Canassurance)
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /llms.txt
+    status: 404
+- host: https://www.medaviebc.ca
+  plan: Medavie Blue Cross (Atlantic Canada, Ontario, Quebec)
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /llms.txt
+    status: 404
+- host: https://www.sk.bluecross.ca
+  plan: Saskatchewan Blue Cross
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /llms.txt
+    status: 404
+- host: https://www.mb.bluecross.ca
+  plan: Manitoba Blue Cross
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /llms.txt
+    status: 404
+security_txt:
+  present: false
+  note: >-
+    No RFC 9116 security.txt on any host in the federation, so no SecurityTxt artifact or
+    pointer is emitted. Absence is the recorded finding.

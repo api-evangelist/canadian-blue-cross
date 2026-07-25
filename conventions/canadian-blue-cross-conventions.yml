@@ -1,0 +1,71 @@
+generated: '2026-07-25'
+method: searched
+source: >-
+  live probes of https://pac.bluecross.ca and https://www.bluecross.ca (2026-07-25); no
+  provider-published conventions documentation exists
+scope: >-
+  Blue Cross Canada documents no API conventions because it documents no API. What follows is
+  the observed cross-cutting behaviour of the only machine-readable HTTP surfaces the federation
+  exposes anonymously. It is recorded so an agent knows exactly what it will encounter — and,
+  more importantly, what it will not.
+authentication:
+  style: none for any product API
+  observed: >-
+    OAuth 2.0 / OIDC authorization-code + PKCE for Pacific Blue Cross website members only
+    (see authentication/canadian-blue-cross-authentication.yml); everything else is human web
+    session login.
+  api_keys: >-
+    The Pacific Blue Cross Umbraco Content Delivery API answers every anonymous request with
+    401, so it is credential-gated; the credential type is not published and no key-request
+    process exists, leaving the surface closed to third parties.
+idempotency:
+  supported: false
+  note: >-
+    No Idempotency-Key header, no idempotent-retry contract, and no write endpoint of any kind
+    is exposed publicly. No `Idempotency` pointer is emitted.
+pagination:
+  supported: unknown
+  note: >-
+    The Umbraco Content Delivery API convention is skip/take query parameters with a
+    { total, items } envelope, but this deployment returns 401 to anonymous requests, so no
+    paginated response was observed and nothing is asserted.
+versioning:
+  scheme: uri-path
+  observed: >-
+    /umbraco/delivery/api/v1/* and /umbraco/delivery/api/v2/* both respond (401), so two API
+    versions are routed concurrently on the Pacific Blue Cross host.
+  policy_published: false
+error_envelope:
+  primary: application/problem+json (RFC 9457 / ASP.NET Core ProblemDetails)
+  fields: [type, title, status, traceId]
+  oauth: RFC 6749 error / error_description / error_uri on the token endpoint
+  reference: errors/canadian-blue-cross-problem-types.yml
+request_tracing:
+  header: none advertised
+  body_field: traceId
+  note: >-
+    Problem responses carry a W3C traceparent-format traceId in the body, which is the only
+    correlation identifier a caller receives.
+rate_limits:
+  documented: false
+  headers_observed: none
+  note: >-
+    Alberta Blue Cross fronts its site with Cloudflare and returns 403/interstitial to
+    non-browser clients, which is bot management rather than a documented API rate-limit policy.
+webhooks:
+  supported: false
+  note: No event, callback, or webhook surface is documented anywhere in the federation.
+transport:
+  https_only: true
+  tls: TLS 1.3 negotiated on every host probed
+  hsts: >-
+    Present on all six member-plan hosts (max-age 31536000 with includeSubDomains on Alberta,
+    Pacific, Ontario, Medavie; 15552000 on Saskatchewan; 31536000 without includeSubDomains on
+    Manitoba). The association site www.bluecross.ca sets HSTS with a very short max-age of 300.
+cross_references:
+  authentication: authentication/canadian-blue-cross-authentication.yml
+  scopes: scopes/canadian-blue-cross-scopes.yml
+  errors: errors/canadian-blue-cross-problem-types.yml
+  conformance: conformance/canadian-blue-cross-conformance.yml
+  well_known: well-known/canadian-blue-cross-well-known.yml
+  domain_security: security/canadian-blue-cross-domain-security.yml

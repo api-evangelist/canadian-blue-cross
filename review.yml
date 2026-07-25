@@ -132,6 +132,42 @@ findings:
     status: 403
     note: Alberta Blue Cross returns 403 to non-browser clients (bot protection); no
       developer subdomain resolves.
+  - url: https://pac.bluecross.ca/.well-known/openid-configuration
+    status: 200
+    note: >-
+      Enrichment round 2026-07-25. Live OIDC Discovery document — issuer
+      https://pac.bluecross.ca/, OpenIddict authorization server for Umbraco Content
+      Delivery API member sign-in. Saved verbatim to well-known/.
+  - url: https://pac.bluecross.ca/.well-known/oauth-authorization-server
+    status: 200
+    note: RFC 8414 metadata, byte-identical to the OIDC discovery document. Saved verbatim.
+  - url: https://pac.bluecross.ca/.well-known/jwks
+    status: 200
+    note: Single RSA signing key (use=sig, RS256). Saved verbatim.
+  - url: https://pac.bluecross.ca/umbraco/delivery/api/v2/content
+    status: 401
+    note: >-
+      Umbraco Content Delivery API, credential-gated. Returns application/problem+json
+      (RFC 9457 shape with type/title/status/traceId). v1 and v2 both route. An unknown
+      item id also returns 401, so no content inventory leaks. CMS surface, not an API
+      product — deliberately NOT listed in apis[].
+  - url: https://pac.bluecross.ca/umbraco/delivery/api/v1/security/member/token
+    status: 401
+    note: >-
+      POST without credentials returns the RFC 6749 error envelope
+      {error: invalid_client, error_uri: documentation.openiddict.com/errors/ID2029}.
+  - url: https://pac.bluecross.ca/umbraco/swagger/delivery/swagger.json
+    status: 404
+    note: Umbraco's Swagger UI/spec routes are disabled on this deployment; also 404 for
+      /umbraco/swagger/v1/swagger.json and /umbraco/swagger/index.html.
+  - url: https://ab.bluecross.ca/llms.txt
+    status: 200
+    note: >-
+      Soft 404 — the host answers 200 with its HTML "Page not found" template. Not an
+      llms.txt. No llms.txt exists anywhere in the federation.
+  - url: https://www.bluecross.ca/feed/
+    status: 200
+    note: WordPress RSS feed for the association news section (application/rss+xml).
   acordPosture:
     posture: no ACORD reference found
     evidence: >-
@@ -166,11 +202,24 @@ findings:
   authModel:
     scheme: web session login (member / plan-sponsor / provider portals)
     publicApiAuth: none
-    oauthDiscovery: false
+    oauthDiscovery: partial
+    oauthDiscoveryHosts:
+    - host: pac.bluecross.ca
+      openidConfiguration: 200
+      oauthAuthorizationServer: 200
+      jwks: 200
     note: >-
-      No API key programme, no OAuth2 client-credentials or authorization-code flow, no
-      mTLS partner onboarding, and no OIDC discovery document served on the domain.
-      Authentication is human web login only.
+      CORRECTION (enrichment round 2026-07-25): the first round checked /.well-known/ only
+      on bluecross.ca. Extending the probe to the member-plan hosts found that Pacific Blue
+      Cross (pac.bluecross.ca) DOES serve live, anonymous OIDC Discovery, RFC 8414
+      authorization-server metadata, and a JWKS — an OpenIddict authorization server backing
+      Umbraco Content Delivery API member sign-in (authorization_code + refresh_token, PKCE
+      S256, RS256, scopes openid and offline_access). It authenticates website members
+      against a CMS; it is not an insurance product API, and the Content Delivery API itself
+      returns 401 application/problem+json to every anonymous request. Every other host in
+      the federation returns 404 or does not resolve. There is still no API key programme,
+      no client-credentials flow, no mTLS partner onboarding, and no self-serve client
+      registration anywhere.
   specs:
     openapi: 0
     swagger: 0

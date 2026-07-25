@@ -41,6 +41,8 @@ modified: '2026-07-25'
 specificationVersion: '0.19'
 apis: []
 common:
+- type: DomainSecurity
+  url: security/canadian-blue-cross-domain-security.yml
 - type: Website
   url: https://www.bluecross.ca/
 - type: About
@@ -49,6 +51,15 @@ common:
   url: https://www.bluecross.ca/contact/
 - type: News
   url: https://www.bluecross.ca/news/
+- type: Blog
+  url: https://www.bluecross.ca/news/
+  name: Association news and articles
+- type: BlogRSS
+  url: https://www.bluecross.ca/feed/
+  name: WordPress RSS feed (HTTP 200, application/rss+xml)
+- type: Support
+  url: https://www.bluecross.ca/contact/
+  name: Regional office contact directory — the only published support channel
 - type: TermsOfService
   url: https://www.bluecross.ca/terms-of-use-privacy/
 - type: PrivacyPolicy
@@ -62,6 +73,27 @@ common:
 - type: Login
   url: https://www.bluecross.ca/memberweb/
   name: Member sign-in and claims entry point (authenticated, per member plan)
+- type: WellKnown
+  url: well-known/canadian-blue-cross-well-known.yml
+  name: /.well-known/ discovery index across the association site and six member-plan hosts
+- type: Authentication
+  url: authentication/canadian-blue-cross-authentication.yml
+  name: Authentication profile — OIDC/OAuth2 member sign-in (Pacific Blue Cross); no public API auth
+- type: OAuthScopes
+  url: scopes/canadian-blue-cross-scopes.yml
+  name: Published OAuth scopes (openid, offline_access) from the Pacific Blue Cross discovery document
+- type: ErrorCatalog
+  url: errors/canadian-blue-cross-problem-types.yml
+  name: Problem types observed live (RFC 9457 problem+json and RFC 6749 OAuth errors)
+- type: Conformance
+  url: conformance/canadian-blue-cross-conformance.yml
+  name: Standards conformance assessed from live probes and discovery documents
+- type: Conventions
+  url: conventions/canadian-blue-cross-conventions.yml
+  name: Cross-cutting HTTP semantics observed on the federation's public surfaces
+- type: LLMsTxt
+  url: llms/canadian-blue-cross-llms.txt
+  name: Generated llms.txt — the provider publishes none
 - type: Review
   url: review.yml
 maintainers:
