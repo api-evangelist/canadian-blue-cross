@@ -1,0 +1,69 @@
+aid: canadian-blue-cross
+url: https://raw.githubusercontent.com/api-evangelist/canadian-blue-cross/refs/heads/main/apis.yml
+name: Blue Cross Canada
+kind: company
+description: >-
+  Blue Cross Canada (bluecross.ca) is the national consumer-facing brand of the Canadian
+  Association of Blue Cross Plans, the association that owns the Blue Cross trademark in
+  Canada and coordinates a federation of independent, largely not-for-profit regional
+  Blue Cross plans — Alberta Blue Cross, Pacific Blue Cross, Manitoba Blue Cross,
+  Saskatchewan Blue Cross, Ontario and Quebec Blue Cross (Canassurance), and Medavie Blue
+  Cross. Operating in Canada since 1938, the federation covers roughly eight million
+  Canadians a year across supplementary health and dental benefits, group and employee
+  benefits, retiree plans, travel medical insurance, and term life and critical illness
+  cover, and several member plans also administer public health programs on behalf of
+  provincial and federal governments. Its API posture is partner-gated and effectively
+  non-existent as a public surface: bluecross.ca is a WordPress marketing and
+  region-routing site with no developer portal, no API reference, and no published
+  OpenAPI, and the developer/developers/docs/api subdomains do not resolve at all.
+  Members, plan sponsors, brokers, and health-care providers integrate through
+  authenticated member portals, mobile apps, group-benefit employer portals, and
+  third-party health-claim rails rather than through any self-serve API. Canada offers no
+  forcing function that would change this — OSFI supervises prudentially, the provinces
+  (FSRA, AMF) regulate market conduct, there is no open-insurance mandate, and
+  Consumer-Driven Banking explicitly excludes insurance.
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+tags:
+- Insurance
+- Canada
+- Health Insurance
+- Dental Benefits
+- Travel Insurance
+- Life Insurance
+- Employee Benefits
+- Group Benefits
+- Claims
+- Carrier
+- Association
+- No Public API
+created: '2026-07-25'
+modified: '2026-07-25'
+specificationVersion: '0.19'
+apis: []
+common:
+- type: Website
+  url: https://www.bluecross.ca/
+- type: About
+  url: https://www.bluecross.ca/about/
+- type: Contact
+  url: https://www.bluecross.ca/contact/
+- type: News
+  url: https://www.bluecross.ca/news/
+- type: TermsOfService
+  url: https://www.bluecross.ca/terms-of-use-privacy/
+- type: PrivacyPolicy
+  url: https://www.bluecross.ca/terms-of-use-privacy/
+- type: Accessibility
+  url: https://www.bluecross.ca/accessibility/
+- type: Careers
+  url: https://www.bluecross.ca/careers/
+- type: Sitemap
+  url: https://www.bluecross.ca/sitemap_index.xml
+- type: Login
+  url: https://www.bluecross.ca/memberweb/
+  name: Member sign-in and claims entry point (authenticated, per member plan)
+- type: Review
+  url: review.yml
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

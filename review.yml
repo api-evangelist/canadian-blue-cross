@@ -1,0 +1,253 @@
+aid: canadian-blue-cross
+name: Blue Cross Canada
+review:
+  question: Does Blue Cross Canada expose a public, self-serve developer portal or any
+    downloadable API definition for its insurance products?
+  answer: false
+  date: '2026-07-25'
+  reviewer: API Evangelist
+  homeMarket: Canada
+  tier: carrier-life-health
+  gated: true
+  verdict: >-
+    No public API surface. bluecross.ca is a marketing and region-routing site for a
+    federation of independent regional Blue Cross plans. Every integration path found is
+    an authenticated member, plan-sponsor, or health-provider login.
+findings:
+  summary: |
+    Blue Cross Canada is the national brand of the Canadian Association of Blue Cross
+    Plans — an association of independent regional plans (Alberta Blue Cross, Pacific
+    Blue Cross, Manitoba Blue Cross, Saskatchewan Blue Cross, Ontario and Quebec Blue
+    Cross via Canassurance, and Medavie Blue Cross), covering supplementary health and
+    dental, group benefits, retiree plans, travel medical, and term life / critical
+    illness.
+
+    bluecross.ca is a WordPress site of 27 pages plus 13 regional pages and a
+    member-savings provider directory. It publishes no developer portal, no API
+    reference, no SDK, no Postman collection, no GraphQL endpoint, no webhook or event
+    catalog, and no OpenAPI, Swagger, or AsyncAPI document. The developer, developers,
+    docs, and api subdomains do not resolve (NXDOMAIN); /developers, /developer, /api,
+    /integrations, /partners, /openapi.json, /swagger.json, /api-docs and /graphql all
+    return 404.
+
+    Every occurrence of the string "API" across the 40 pages fetched from the site is
+    inside a bundled New Relic browser-telemetry script; the single occurrence of
+    "developer" is a WCAG accessibility citation. Neither is an API product signal.
+
+    The only machine-readable endpoint on the domain is the default WordPress REST route
+    at /wp-json/ (HTTP 200, application/json). That is an incidental CMS surface exposed
+    by the publishing platform, not an insurance API, and it is deliberately NOT listed
+    as an API in apis.yml.
+
+    The same probing was extended to the operating member plans, since the association
+    itself underwrites nothing. pac.bluecross.ca, on.bluecross.ca, sk.bluecross.ca and
+    www.medaviebc.ca return 404 on every developer path tried; api./developer. subdomains
+    under those hosts do not resolve; ab.bluecross.ca returns 403 to non-browser clients
+    (bot protection). The one 200 found — sk.bluecross.ca/partners — is a Make-A-Wish
+    charitable-partners page, not a developer or integration surface. This is a
+    login-wall / marketing-site posture end to end, and recording that is the finding.
+  developerPortal:
+    url: ''
+    confirmed: false
+    classification: none
+    note: >-
+      No first-party developer portal of any kind. Not a login wall and not an
+      innovation page — the surface simply does not exist on bluecross.ca or on the
+      member-plan hosts probed.
+  probes:
+  - url: https://bluecross.ca/
+    status: 200
+    note: Redirects to https://www.bluecross.ca/ — marketing homepage.
+  - url: https://www.bluecross.ca/
+    status: 200
+    note: WordPress marketing site, "Canada's Trusted Insurance | Blue Cross".
+  - url: https://developer.bluecross.ca/
+    status: 0
+    note: DNS does not resolve (NXDOMAIN).
+  - url: https://developers.bluecross.ca/
+    status: 0
+    note: DNS does not resolve (NXDOMAIN).
+  - url: https://docs.bluecross.ca/
+    status: 0
+    note: DNS does not resolve (NXDOMAIN).
+  - url: https://api.bluecross.ca/
+    status: 0
+    note: DNS does not resolve (NXDOMAIN).
+  - url: https://www.bluecross.ca/developers
+    status: 404
+  - url: https://www.bluecross.ca/developer
+    status: 404
+  - url: https://www.bluecross.ca/api
+    status: 404
+  - url: https://www.bluecross.ca/partners
+    status: 404
+  - url: https://www.bluecross.ca/integrations
+    status: 404
+  - url: https://www.bluecross.ca/openapi.json
+    status: 404
+  - url: https://www.bluecross.ca/swagger.json
+    status: 404
+  - url: https://www.bluecross.ca/api-docs
+    status: 404
+  - url: https://www.bluecross.ca/graphql
+    status: 404
+  - url: https://www.bluecross.ca/.well-known/openid-configuration
+    status: 404
+  - url: https://www.bluecross.ca/.well-known/oauth-authorization-server
+    status: 404
+  - url: https://www.bluecross.ca/.well-known/security.txt
+    status: 404
+  - url: https://www.bluecross.ca/robots.txt
+    status: 200
+    note: Standard WordPress robots.txt; declares sitemap_index.xml only.
+  - url: https://www.bluecross.ca/sitemap_index.xml
+    status: 200
+    note: Yoast sitemap index — post, page, region, provider, provider_category. 27
+      pages, 13 regions, 154 member-savings providers. No developer or API section.
+  - url: https://www.bluecross.ca/wp-json/
+    status: 200
+    note: Default WordPress REST API root (application/json). Incidental CMS endpoint,
+      not an insurance API. Not listed in apis.yml.
+  - url: https://www.bluecross.ca/memberweb/
+    status: 200
+    note: >-
+      The Members page, whose only action is a Make a Claim button routing to per-plan
+      authenticated portals (e.g. members.medaviebc.ca). Login wall.
+  - url: https://pac.bluecross.ca/developers
+    status: 404
+    note: Pacific Blue Cross — also 404 on /api, /developer, /partners, /integrations,
+      /openapi.json, /swagger.json, /api-docs.
+  - url: https://on.bluecross.ca/developers
+    status: 404
+    note: Ontario Blue Cross (Canassurance) — same full 404 set.
+  - url: https://www.sk.bluecross.ca/developers
+    status: 404
+    note: Saskatchewan Blue Cross — same 404 set except /partners (200), which is a
+      Make-A-Wish charitable-partners page, not a developer surface.
+  - url: https://www.medaviebc.ca/developers
+    status: 404
+    note: Medavie Blue Cross — same full 404 set; developer./api./developers.medaviebc.ca
+      do not resolve.
+  - url: https://ab.bluecross.ca/
+    status: 403
+    note: Alberta Blue Cross returns 403 to non-browser clients (bot protection); no
+      developer subdomain resolves.
+  acordPosture:
+    posture: no ACORD reference found
+    evidence: >-
+      Zero occurrences of "ACORD", "AL3", "ACORD XML", or "NGDS" across all 40 pages
+      fetched from bluecross.ca (all 27 site pages plus all 13 regional pages). This is
+      expected rather than surprising: ACORD is a property-and-casualty data-standards
+      body, and Blue Cross Canada is a health, dental, travel, group-benefits and life
+      carrier federation. The relevant Canadian standards seam for this book of business
+      is health-claim adjudication rails (CLHIA / pharmacy claim standards and
+      third-party provider e-claims networks), none of which are documented publicly by
+      the association either. IVANS / agency-download / Applied Epic / Vertafore AMS360
+      are US P&C agency-management concepts and are correctly absent here.
+  insuranceVerbs:
+    quote:
+      exposed: false
+      note: Consumer quoting is HTML web flows on each member plan's site; no API.
+    bind:
+      exposed: false
+    issue:
+      exposed: false
+    fnol:
+      exposed: false
+      note: >-
+        Claims submission exists only inside authenticated member portals and mobile
+        apps ("Make a Claim" at /memberweb/), and via provider-side e-claims rails. No
+        public FNOL or claims API is documented.
+    audience: none-public
+    note: >-
+      No consumer-facing, agent-facing, or partner-facing API is published. The only
+      documented integration audiences are members, plan sponsors/employers, brokers,
+      and health-care providers — all behind authentication.
+  authModel:
+    scheme: web session login (member / plan-sponsor / provider portals)
+    publicApiAuth: none
+    oauthDiscovery: false
+    note: >-
+      No API key programme, no OAuth2 client-credentials or authorization-code flow, no
+      mTLS partner onboarding, and no OIDC discovery document served on the domain.
+      Authentication is human web login only.
+  specs:
+    openapi: 0
+    swagger: 0
+    asyncapi: 0
+    graphql: 0
+    proto: 0
+    postman: 0
+    note: >-
+      No specification of any kind was found, so no openapi/ directory was created. No
+      candidate URL returned a parseable OpenAPI or Swagger document; every candidate
+      returned a 404 HTML page.
+  webhooks:
+    documented: false
+    note: No event catalog, webhook documentation, or AsyncAPI. Absence is the finding.
+  postman:
+    documented: false
+    note: No public Postman collection or workspace found for the association or the
+      member plans probed.
+  transports:
+  - protocol: HTTPS
+    scheme: https
+    baseURL: https://www.bluecross.ca/
+    documented: true
+    note: Marketing website only. No documented API base URL exists.
+  - protocol: REST
+    documented: false
+    note: >-
+      No product REST API is documented. The default WordPress /wp-json/ route responds
+      200 but is a CMS artifact of the publishing platform, not an insurance API.
+  - protocol: GraphQL
+    documented: false
+  - protocol: gRPC
+    documented: false
+  - protocol: WebSocket
+    documented: false
+  - protocol: SFTP/EDI
+    documented: false
+    note: >-
+      Bulk enrolment and claims file exchange with plan sponsors and provider networks
+      is industry-standard for this book of business but is not publicly documented by
+      the association, so nothing is asserted here.
+marketContext: >-
+  Canada has the most fragmented insurance supervision of the four markets studied. OSFI
+  supervises federally-regulated insurers prudentially while the provinces regulate
+  market conduct (FSRA in Ontario, AMF in Quebec). There is no open-insurance mandate,
+  and Consumer-Driven Banking — Canada's open-banking framework — excludes insurance
+  entirely. Blue Cross Canada's zero-API posture is therefore fully compliant behaviour,
+  not a lag: nothing in the Canadian regime asks a health-and-benefits carrier
+  federation to publish an API.
+sources:
+- url: https://www.bluecross.ca/
+  type: Website
+  note: Homepage — health, group, travel, life navigation; 8 million Canadians covered;
+    operating since 1938.
+- url: https://www.bluecross.ca/about/
+  type: About
+  note: Describes Blue Cross as "an association of independent Blue Cross Plans"; no
+    API, developer, integration, or ACORD mention.
+- url: https://www.bluecross.ca/our-regions/alberta/
+  type: Documentation
+  note: Regional routing page; links out to Alberta Blue Cross (ab.bluecross.ca).
+- url: https://www.bluecross.ca/our-regions/ontario/
+  type: Documentation
+  note: Regional routing page; links to on.bluecross.ca and www.medaviebc.ca for group
+    coverage.
+- url: https://www.bluecross.ca/memberweb/
+  type: Login
+  note: Member entry point; footer confirms "Registered Trademark of the Canadian
+    Association of Blue Cross Plans, an association of independent Blue Cross Plans."
+- url: https://www.bluecross.ca/sitemap_index.xml
+  type: Sitemap
+  note: Full URL inventory used to rule out an unlinked developer section.
+actions:
+  apisYmlCreated: true
+  apisListed: 0
+  openapiDirectoryCreated: false
+  reason: >-
+    apis[] is intentionally empty. No real, documented, public API exists for Blue Cross
+    Canada, and listing the incidental WordPress /wp-json/ route or a member login wall
+    as an API would misrepresent the sector. An honest zero is the correct record.
