@@ -1,5 +1,7 @@
 aid: canadian-blue-cross
 url: https://raw.githubusercontent.com/api-evangelist/canadian-blue-cross/refs/heads/main/apis.yml
+x-api-posture: no-product-api
+x-api-posture-basis: observed
 name: Blue Cross Canada
 kind: company
 description: >-
