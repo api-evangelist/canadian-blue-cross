@@ -41,6 +41,10 @@ accessModel:
   trial: false
   try_now: false
   public: false
+  gated: partner
+  gated_source:
+  - tag:No Public API
+  - description
   label: Self-serve signup
   confidence: medium
   source:
@@ -62,7 +66,6 @@ tags:
 - Claims
 - Carrier
 - Associations
-- No Public API
 tags_raw:
 - Insurance
 - Canada
@@ -75,7 +78,6 @@ tags_raw:
 - Claims
 - Carrier
 - Association
-- No Public API
 created: '2026-07-25'
 modified: '2026-07-25'
 specificationVersion: '0.23'
@@ -139,3 +141,5 @@ common:
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
+x-tags-removed:
+- No Public API
