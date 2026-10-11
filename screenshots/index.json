@@ -1,0 +1,11 @@
+[
+  {
+    "repo": "canadian-blue-cross",
+    "captured_at": "2026-10-11T183811",
+    "source_url": "https://www.bluecross.ca/",
+    "source_type": "Website",
+    "file": "canadian-blue-cross-2026-10-11T183811.png",
+    "bytes": 392308,
+    "capture": "playwright-local"
+  }
+]
